@@ -66,12 +66,13 @@ with gr.Blocks() as demo:
 with gr.Blocks() as demo:
     with gr.Row():
         with gr.Column():
-            inputs=gr.Textbox(lines=2, label="Search Criteria", value="Spaceships, aliens, and heroes saving America")
+            inputs=gr.Textbox(lines=2, label="Search Criteria")
             text_button = gr.Button("Submit")
         with gr.Column():
-            pass
+            gr.Examples(["wall street, stock market, fraud", "Spaceships, aliens, and heroes saving America"], inputs, exec_query)
     with gr.Row():
         outputs=gr.Dataframe(row_count=(5, "dynamic"), wrap=True, overflow_row_behaviour="paginate", height=800)
+        
     
     text_button.click(exec_query, inputs=inputs, outputs=outputs)
 
