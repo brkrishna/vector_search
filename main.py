@@ -13,7 +13,7 @@ def exec_query(input):
     
     res = collection.query(
         query_texts=input,
-        n_results=10,
+        n_results=20,
         include=["metadatas",'documents', 'distances'],
     )
 
@@ -46,10 +46,11 @@ def exec_query(input):
         dist.append(p)                    
 
     df["Distance"] = pd.Series(dist)    
+    df['SNo'] = df.index +1
 
     #df2 = df.assign(Plot= docs)
 #    df = pd.DataFrame(res)
-    new_cols = "Title", "Distance", "ReleaseYear", "Genre", "Director", "Plot", "Cast"
+    new_cols = "SNo", "Title", "Distance", "ReleaseYear", "Genre", "Director", "Plot", "Cast"
     df=df.reindex(columns=new_cols)
     return df
 
@@ -69,10 +70,9 @@ with gr.Blocks() as demo:
             inputs=gr.Textbox(lines=2, label="Search Criteria")
             text_button = gr.Button("Submit")
         with gr.Column():
-            gr.Examples(["wall street, stock market, fraud", "Spaceships, aliens, and heroes saving America"], inputs, exec_query)
+            gr.Examples(["wall street, stock market, fraud", "charlie chaplin, restaurant, bomb explosion", "detective murder in train"], inputs, exec_query)
     with gr.Row():
-        outputs=gr.Dataframe(row_count=(5, "dynamic"), wrap=True, overflow_row_behaviour="paginate", height=800)
-        
+        outputs=gr.Dataframe(wrap=True, height=500)
     
     text_button.click(exec_query, inputs=inputs, outputs=outputs)
 
